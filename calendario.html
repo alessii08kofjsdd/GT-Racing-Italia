@@ -1,0 +1,917 @@
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Calendario | GT Racing Italia</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #080909;
+            color: #f5f5f5;
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* NAVBAR */
+
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 74px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6%;
+            background: rgba(8, 9, 9, 0.92);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+            z-index: 1000;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 900;
+            font-size: 20px;
+            letter-spacing: 1px;
+        }
+
+        .brand img {
+            width: 42px;
+            height: 42px;
+            object-fit: contain;
+        }
+
+        .brand span {
+            color: #18d66b;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .nav-links a {
+            opacity: 0.75;
+            transition: 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+            color: #18d66b;
+        }
+
+        .discord-btn {
+            background: #18d66b;
+            color: #050505 !important;
+            padding: 10px 18px;
+            border-radius: 7px;
+            opacity: 1 !important;
+        }
+
+        .discord-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(24,214,107,0.2);
+        }
+
+        /* HERO */
+
+        .hero {
+            min-height: 58vh;
+            margin-top: 74px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            background:
+                linear-gradient(
+                    rgba(0,0,0,0.76),
+                    rgba(0,0,0,0.88)
+                ),
+                url("banner.jpg") center/cover no-repeat;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(0,0,0,0.35),
+                    transparent 50%,
+                    rgba(0,0,0,0.35)
+                );
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 40px 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            border: 1px solid rgba(24,214,107,0.45);
+            background: rgba(24,214,107,0.08);
+            color: #18d66b;
+            padding: 7px 15px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-size: clamp(48px, 8vw, 90px);
+            line-height: 0.95;
+            font-weight: 1000;
+            letter-spacing: -4px;
+        }
+
+        .hero h1 span {
+            color: #18d66b;
+        }
+
+        .hero p {
+            margin: 24px auto 0;
+            max-width: 680px;
+            color: #b9b9b9;
+            font-size: 17px;
+        }
+
+        /* GENERAL */
+
+        .container {
+            width: min(1150px, 90%);
+            margin: auto;
+        }
+
+        section {
+            padding: 90px 0;
+        }
+
+        .section-title {
+            margin-bottom: 45px;
+        }
+
+        .eyebrow {
+            color: #18d66b;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .section-title h2 {
+            font-size: clamp(30px, 5vw, 46px);
+            line-height: 1.1;
+            letter-spacing: -1px;
+        }
+
+        .section-title p {
+            color: #8f8f8f;
+            margin-top: 12px;
+        }
+
+        /* FORMAT */
+
+        .format {
+            background: #0c0e0d;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .format-card {
+            background: #111312;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 12px;
+            padding: 28px;
+        }
+
+        .format-number {
+            color: #18d66b;
+            font-size: 34px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .format-card h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .format-card p {
+            color: #888;
+            font-size: 14px;
+        }
+
+        /* CALENDAR */
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .round {
+            position: relative;
+            background: #101211;
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 14px;
+            padding: 27px;
+            overflow: hidden;
+            transition: 0.25s;
+        }
+
+        .round:hover {
+            transform: translateY(-4px);
+            border-color: rgba(24,214,107,0.4);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.25);
+        }
+
+        .round::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #18d66b;
+        }
+
+        .round-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 18px;
+        }
+
+        .round-number {
+            color: #18d66b;
+            font-size: 12px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+        }
+
+        .date {
+            font-size: 11px;
+            font-weight: 800;
+            color: #777;
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 5px 9px;
+            border-radius: 5px;
+        }
+
+        .round h3 {
+            font-size: 27px;
+            margin-bottom: 4px;
+        }
+
+        .country {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .session {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .session-box {
+            background: #171918;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .session-box small {
+            display: block;
+            color: #777;
+            text-transform: uppercase;
+            font-size: 9px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
+        }
+
+        .session-box strong {
+            font-size: 16px;
+        }
+
+        .tba {
+            color: #18d66b;
+        }
+
+        /* INFO */
+
+        .info-box {
+            margin-top: 35px;
+            padding: 22px 25px;
+            background: rgba(24,214,107,0.05);
+            border: 1px solid rgba(24,214,107,0.16);
+            border-radius: 10px;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        .info-box strong {
+            color: #18d66b;
+        }
+
+        /* CTA */
+
+        .cta {
+            padding: 80px 20px;
+            text-align: center;
+            background:
+                linear-gradient(
+                    rgba(8,9,9,0.9),
+                    rgba(8,9,9,0.96)
+                ),
+                url("banner.jpg") center/cover no-repeat;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .cta h2 {
+            font-size: clamp(30px, 5vw, 50px);
+            margin-bottom: 15px;
+        }
+
+        .cta p {
+            color: #999;
+            max-width: 650px;
+            margin: auto auto 28px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #18d66b;
+            color: #050505;
+            font-weight: 900;
+            padding: 14px 25px;
+            border-radius: 7px;
+            transition: 0.2s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(24,214,107,0.2);
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding: 30px 6%;
+            color: #666;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        footer strong {
+            color: #aaa;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 800px) {
+
+            nav {
+                padding: 0 5%;
+            }
+
+            .nav-links a:not(.discord-btn) {
+                display: none;
+            }
+
+            .format-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: 52vh;
+            }
+
+            section {
+                padding: 65px 0;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .brand {
+                font-size: 16px;
+            }
+
+            .brand img {
+                width: 35px;
+                height: 35px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .session {
+                grid-template-columns: 1fr;
+            }
+
+            footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+
+    <nav>
+        <a href="index.html" class="brand">
+            <img src="logo.png" alt="GT Racing Italia">
+            GT <span>RACING</span> ITALIA
+        </a>
+
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#calendario">Calendario</a>
+            <a href="#format">Format</a>
+            <a class="discord-btn"
+               href="https://discord.gg/gG2YKaRp68"
+               target="_blank">
+                Discord
+            </a>
+        </div>
+    </nav>
+
+
+    <!-- HERO -->
+
+    <header class="hero">
+
+        <div class="hero-content">
+
+            <div class="badge">
+                STAGIONE 01 · CALENDARIO
+            </div>
+
+            <h1>
+                IL CAMPIONATO<br>
+                <span>PRENDE FORMA.</span>
+            </h1>
+
+            <p>
+                10 appuntamenti, 10 circuiti e una stagione interamente
+                dedicata alle gare GT su Assetto Corsa Competizione.
+            </p>
+
+        </div>
+
+    </header>
+
+
+    <!-- FORMAT -->
+
+    <section class="format" id="format">
+
+        <div class="container">
+
+            <div class="section-title">
+                <div class="eyebrow">FORMAT DI GARA</div>
+                <h2>Un'ora. Tutta da correre.</h2>
+                <p>
+                    Ogni round segue lo stesso formato per garantire
+                    competizione e organizzazione.
+                </p>
+            </div>
+
+            <div class="format-grid">
+
+                <div class="format-card">
+                    <div class="format-number">15'</div>
+                    <h3>Qualifica</h3>
+                    <p>
+                        15 minuti per conquistare la posizione migliore
+                        sulla griglia di partenza.
+                    </p>
+                </div>
+
+                <div class="format-card">
+                    <div class="format-number">45'</div>
+                    <h3>Gara</h3>
+                    <p>
+                        45 minuti di gara intensa, strategia,
+                        sorpassi e lotta per il podio.
+                    </p>
+                </div>
+
+                <div class="format-card">
+                    <div class="format-number">~1h</div>
+                    <h3>Evento</h3>
+                    <p>
+                        Qualifica e gara nello stesso appuntamento,
+                        per una durata complessiva di circa un'ora.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CALENDAR -->
+
+    <section id="calendario">
+
+        <div class="container">
+
+            <div class="section-title">
+                <div class="eyebrow">STAGIONE 01</div>
+                <h2>Calendario</h2>
+                <p>
+                    10 round sui circuiti inclusi nel gioco base di
+                    Assetto Corsa Competizione.
+                </p>
+            </div>
+
+
+            <div class="calendar">
+
+                <!-- ROUND 01 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 01</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Monza</h3>
+                    <div class="country">🇮🇹 Italia · Autodromo Nazionale Monza</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 02 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 02</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Spa-Francorchamps</h3>
+                    <div class="country">🇧🇪 Belgio · Circuit de Spa-Francorchamps</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 03 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 03</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Brands Hatch</h3>
+                    <div class="country">🇬🇧 Regno Unito · Brands Hatch</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 04 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 04</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Misano</h3>
+                    <div class="country">🇮🇹 Italia · Misano World Circuit</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 05 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 05</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Barcelona-Catalunya</h3>
+                    <div class="country">🇪🇸 Spagna · Circuit de Barcelona-Catalunya</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 06 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 06</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Nürburgring</h3>
+                    <div class="country">🇩🇪 Germania · Nürburgring</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 07 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 07</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Zandvoort</h3>
+                    <div class="country">🇳🇱 Paesi Bassi · Circuit Zandvoort</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 08 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 08</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Paul Ricard</h3>
+                    <div class="country">🇫🇷 Francia · Circuit Paul Ricard</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 09 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 09</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Silverstone</h3>
+                    <div class="country">🇬🇧 Regno Unito · Silverstone Circuit</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+
+                <!-- ROUND 10 -->
+
+                <article class="round">
+
+                    <div class="round-top">
+                        <span class="round-number">ROUND 10</span>
+                        <span class="date">TBA</span>
+                    </div>
+
+                    <h3>Hungaroring</h3>
+                    <div class="country">🇭🇺 Ungheria · Hungaroring</div>
+
+                    <div class="session">
+                        <div class="session-box">
+                            <small>Qualifica</small>
+                            <strong>15 min</strong>
+                        </div>
+
+                        <div class="session-box">
+                            <small>Gara</small>
+                            <strong>45 min</strong>
+                        </div>
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <div class="info-box">
+                <strong>Nota:</strong>
+                il calendario utilizza esclusivamente circuiti disponibili
+                nel gioco base di Assetto Corsa Competizione.
+                Non sono richiesti DLC per partecipare alla Stagione 01.
+                Le date ufficiali verranno comunicate successivamente.
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- CTA -->
+
+    <section class="cta">
+
+        <h2>PRONTO A SCENDERE IN PISTA?</h2>
+
+        <p>
+            GT Racing Italia sta costruendo la sua prima griglia.
+            Piloti, Team Principal e telecronisti possono entrare
+            nella community e prepararsi alla Stagione 01.
+        </p>
+
+        <a
+            class="cta-button"
+            href="https://discord.gg/gG2YKaRp68"
+            target="_blank">
+            ENTRA NEL DISCORD
+        </a>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <div>
+            <strong>GT RACING ITALIA</strong>
+            · Stagione 01
+        </div>
+
+        <div>
+            © <span id="year"></span> GT Racing Italia
+        </div>
+
+    </footer>
+
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+    </script>
+
+</body>
+</html>
+```
